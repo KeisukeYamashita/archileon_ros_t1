@@ -141,9 +141,9 @@ def callback(msg):
         print(" ")
 
         move_curve, move_time = cal_move_curve(world_rob_x, world_rob_y, world_rob_theta)
-        now_move_curve.set_move_curve(move_curve)
-
-        time_checker.set_move_time(move_time)
+        # now_move_curve.set_move_curve(move_curve)
+        #
+        # time_checker.set_move_time(move_time)
 
     else:
         rob_is_goal, diff_xy = judge_rob_is_goal(world_rob_x, world_rob_y, world_target_goal_point.x, world_target_goal_point.y)
@@ -154,34 +154,35 @@ def callback(msg):
             print("diff_xy is " + str(diff_xy))
             print(" ")
             move_curve, move_time= cal_move_curve(world_rob_x, world_rob_y, world_rob_theta)
-            now_move_curve.set_move_curve(move_curve)
             print("now_move_curve is " + str(now_move_curve.m_curve))
-            time_checker.set_move_time(move_time)
-            time_checker.set_start_time(time.time())
+            # now_move_curve.set_move_curve(move_curve)
+            # print("now_move_curve is " + str(now_move_curve.m_curve))
+            # time_checker.set_move_time(move_time)
+            # time_checker.set_start_time(time.time())
 
-        if (time_checker.m_time + 2.5) <= float(time.time()) - float(time_checker.s_time):
-            print("/////////////////////////////////////////////////")
-            print("Time is over")
-            print(" ")
-            print("diff_xy is " + str(diff_xy))
-            print(" ")
-
-            move_curve, move_time = cal_move_curve(world_rob_x, world_rob_y, world_rob_theta)
-            now_move_curve.set_move_curve(move_curve)
-            time_checker.set_move_time(move_time)
-            time_checker.set_start_time(time.time())
+        # if (time_checker.m_time + 2.5) <= float(time.time()) - float(time_checker.s_time):
+        #     print("/////////////////////////////////////////////////")
+        #     print("Time is over")
+        #     print(" ")
+        #     print("diff_xy is " + str(diff_xy))
+        #     print(" ")
+        #
+        #     move_curve, move_time = cal_move_curve(world_rob_x, world_rob_y, world_rob_theta)
+        #     now_move_curve.set_move_curve(move_curve)
+        #     time_checker.set_move_time(move_time)
+        #     time_checker.set_start_time(time.time())
 
     # print(time_checker.m_time - (float(time.time()) - float(time_checker.s_time)))
     cal_counter.set_count(1)
     pub_speed.publish(move_speed)
     pub_curve.publish(1.0 / now_move_curve.m_curve)
 
-    if time_checker.s_switch is not True:
-        time_checker.set_start_time(time.time())
+    # if time_checker.s_switch is not True:
+    #     time_checker.set_start_time(time.time())
     # if time_checker.s_time is not None:
     #     time_checker.set_start_time(time.time())
 
-time_checker = time_checker()
+# time_checker = time_checker()
 cal_counter = cal_counter()
 now_move_curve = now_move_curve()
 world_target_goal_point = world_target_goal_point()
