@@ -111,35 +111,36 @@ def callback(msg):
     print("world_rob_y " + str(world_rob_y))
     print(" ")
 
-    if cal_counter.num == 0:
-        print("First move curve")
-        print(" ")
-        move_curve = cal_move_curve(world_rob_x, world_rob_y, world_rob_theta)
-        now_move_curve.set_move_curve(move_curve)
-    else:
-        print("Else")
-        print(" ")
-        if judge_rob_is_goal(world_rob_x, world_rob_y):
-            print("Calculate the next goal point")
-            print(" ")
-            move_curve = cal_move_curve(world_rob_x, world_rob_y, world_rob_theta)
-            now_move_curve.set_move_curve(move_curve)
-            world_target_goal_point.set_point(world_target_pos_list[0][0],world_target_pos_list[0][1])
-            world_target_pos_list.pop(0)
-    cal_counter.set_count(1)
-
-    count = 0
-    rate = rospy.Rate(5)
-    while not rospy.is_shutdown():
-        pub_curve.publish(1.0 / now_move_curve.move_curve)
-        if count >= 4:
-            print("break")
-            break
-        count +=1
-        rate.sleep()
+    # if cal_counter.num == 0:
+    #     print("First move curve")
+    #     print(" ")
+    #     move_curve = cal_move_curve(world_rob_x, world_rob_y, world_rob_theta)
+    #     now_move_curve.set_move_curve(move_curve)
+    # else:
+    #     print("Else")
+    #     print(" ")
+    #     if judge_rob_is_goal(world_rob_x, world_rob_y):
+    #         print("Calculate the next goal point")
+    #         print(" ")
+    #         move_curve = cal_move_curve(world_rob_x, world_rob_y, world_rob_theta)
+    #         now_move_curve.set_move_curve(move_curve)
+    #         world_target_goal_point.set_point(world_target_pos_list[0][0],world_target_pos_list[0][1])
+    #         world_target_pos_list.pop(0)
+    # cal_counter.set_count(1)
+    #
+    # count = 0
+    # rate = rospy.Rate(5)
+    # while not rospy.is_shutdown():
+    #     pub_curve.publish(1.0 / now_move_curve.move_curve)
+    #     if count >= 4:
+    #         print("break")
+    #         break
+    #     count +=1
+    #     rate.sleep()
 
 cal_counter = cal_counter()
 now_move_curve = now_move_curve()
+now_move_curve.set_move_curve(1.0)
 
 world_target_goal_point = world_target_goal_point()
 world_target_goal_point.set_point(world_target_pos_list[0][0],world_target_pos_list[0][1])
@@ -152,4 +153,5 @@ sub = rospy.Subscriber("robot_status", Float32MultiArray, callback)
 rate = rospy.Rate(1)
 while not rospy.is_shutdown():
     pub_speed.publish(move_speed)
+    pub_curve.publish(1.0 / now_move_curve.move_curve)
     rate.sleep()
