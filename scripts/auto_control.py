@@ -12,7 +12,7 @@ import time
 # world_target_pos_list = [(0.5, 0.5), (0, 1.0), (-0.5, 1.5), (0, 2.0), (0.5, 2.5), (0, 3.0), (-0.5, 3.5), (0, 4.0)]
 world_target_pos_list = [(0.5, 0.5), (0.0, 1.0), (-1.0, 1.5), (0, 2.0), (0.5, 1.5), (0, 1.0), (-0.5, -0.5), (0, 0)]
 
-move_speed = 0.1
+move_speed = 0.03
 
 class world_target_goal_point:
     def set_point(self, x, y):
@@ -44,18 +44,21 @@ class time_checker:
         self.s_time = False
 
 def judge_rob_is_goal(temporal_world_rob_x, temporal_world_rob_y, world_goal_x, world_goal_y):
-    result = False
-    # print("judge_rob_is_goal function")
+    rob_is_goal = False
     diff_x = abs(temporal_world_rob_x - world_goal_x)
-    # print(diff_x)
     diff_y = abs(temporal_world_rob_y - world_goal_y)
-    # print(diff_y)
+
+    # print("diff_x is " + str(diff_x))
+    # print("diff_y is " + str(diff_y))
     # print(" ")
-    if diff_x <= 0.01 and diff_y <= 0.01:
-        print("diff_x is " + str(abs(temporal_world_rob_x - world_goal_x)))
-        print("diff_y is " + str(abs(temporal_world_rob_y - world_goal_y)))
-        result = True
-    return result
+    diff_xy = diff_x + diff_y
+    if diff_xy <= 0.005:
+        print("/////////////////////////////////////////////////")
+        print("diff_x is " + str(diff_x))
+        print("diff_y is " + str(diff_y))
+        print("diff_xy is " + str(diff_xy))
+        rob_is_goal = True
+    return rob_is_goal, diff_xy
 
 def cal_move_curve(world_rob_x, world_rob_y, world_rob_theta):
     print(world_target_pos_list)
@@ -119,7 +122,7 @@ def cal_move_curve(world_rob_x, world_rob_y, world_rob_theta):
     move_curve = radius
     print("動く時間 " + str(move_time))
     print("曲率" + str(1.0 / move_curve))
-    print("/////////////////////////////////////////////////")
+
     return move_curve, move_time
 
 def callback(msg):
@@ -143,9 +146,12 @@ def callback(msg):
         time_checker.set_move_time(move_time)
 
     else:
-        if judge_rob_is_goal(world_rob_x, world_rob_y, world_target_goal_point.x, world_target_goal_point.y):
+        rob_is_goal, diff_xy = judge_rob_is_goal(world_rob_x, world_rob_y, world_target_goal_point.x, world_target_goal_point.y)
+        if rob_is_goal is True:
             print("/////////////////////////////////////////////////")
             print("Calculate the next goal point")
+            print(" ")
+            print("diff_xy is " + str(diff_xy))
             print(" ")
             move_curve, move_time= cal_move_curve(world_rob_x, world_rob_y, world_rob_theta)
             now_move_curve.set_move_curve(move_curve)
@@ -153,8 +159,13 @@ def callback(msg):
             time_checker.set_move_time(move_time)
             time_checker.set_start_time(time.time())
 
-        if time_checker.m_time <= float(time.time()) - float(time_checker.s_time):
+        if (time_checker.m_time + 2.5) <= float(time.time()) - float(time_checker.s_time):
+            print("/////////////////////////////////////////////////")
             print("Time is over")
+            print(" ")
+            print("diff_xy is " + str(diff_xy))
+            print(" ")
+
             move_curve, move_time = cal_move_curve(world_rob_x, world_rob_y, world_rob_theta)
             now_move_curve.set_move_curve(move_curve)
             time_checker.set_move_time(move_time)
