@@ -91,13 +91,12 @@ int main(int argc, char **argv){
               }
               else if(4 <= i) {
                 std_msgs::Float32 sv;
-                sv.data=atan2(ws_pos[i - 2][0], center_y-ws_pos[i- 2][1]) + (atan2(ws_pos[i- 2][0], center_y-ws_pos[i- 2][1])) / 2;
+                sv.data=atan2(ws_pos[i - 2][0], center_y-ws_pos[i- 2][1]) + (atan2(ws_pos[i- 2][0], center_y-ws_pos[i- 2][1]))/ 2;
+                // printf("%s\n", );
                 servo_pub[i].publish(sv);
                 // motor_pub[i].publish(mv);
               }
             }
-
-
         }
         else{
             float center_y=1/f_val0;
@@ -113,7 +112,7 @@ int main(int argc, char **argv){
               }
               else if(4 <= i){
                 std_msgs::Float32 sv;
-                sv.data=atan2(ws_pos[i- 2][0], ws_pos[i- 2][1]-center_y) + (atan2(ws_pos[i- 2][0], ws_pos[i- 2][1]-center_y)) / 2;
+                sv.data=-(atan2(ws_pos[i- 2][0], ws_pos[i- 2][1]-center_y) + (atan2(ws_pos[i- 2][0], ws_pos[i- 2][1]-center_y))/2);
                 servo_pub[i].publish(sv);
                 // motor_pub[i].publish(mv);
               }
